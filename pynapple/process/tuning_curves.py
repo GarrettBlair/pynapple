@@ -483,7 +483,8 @@ def compute_1d_tuning_curves_continuous(
 
     tc = np.zeros((len(bins) - 1, tsdframe.shape[1]))
     for i in range(0, nb_bins):
-        tc[i] = np.mean(tsdframe.values[idx == i], axis=0)
+        if np.any(idx == i):
+            tc[i] = np.mean(tsdframe.values[idx == i], axis=0)
     tc[np.isnan(tc)] = 0.0
 
     # Assigning nans if bin is not visited.
@@ -574,9 +575,10 @@ def compute_2d_tuning_curves_continuous(
 
     for i in range(nb_bins[0]):
         for j in range(nb_bins[1]):
-            tc[:, i, j] = np.mean(
-                tsdframe.values[np.logical_and(idxs[:, 0] == i, idxs[:, 1] == j)], 0
-            )
+            if np.any(np.logical_and(idxs[:, 0] == i, idxs[:, 1] == j)):
+                tc[:, i, j] = np.mean(
+                    tsdframe.values[np.logical_and(idxs[:, 0] == i, idxs[:, 1] == j)], 0
+                )
 
     tc[np.isnan(tc)] = 0.0
 
